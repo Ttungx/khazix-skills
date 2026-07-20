@@ -1,0 +1,85 @@
+name: Sync Upstream
+
+on:
+  schedule:
+    # 每 4 天检查一次（每月 1/5/9/13/17/21/25/29 日 08:00 UTC）
+    - cron: "0 8 */4 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout fork
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch upstream
+        run: |
+          git remote add upstream https://github.com/KKKKhazix/khazix-skills.git
+          git fetch upstream main
+
+      - name: Check for upstream updates
+        id: check
+        run: |
+          BEHIND=$(git rev-list --count HEAD..upstream/main)
+          echo "behind=${BEHIND}" >> "$GITHUB_OUTPUT"
+          echo "Fork is ${BEHIND} commit(s) behind upstream/main"
+          if [ "${BEHIND}" = "0" ]; then
+            echo "Already up to date with upstream."
+          fi
+
+      - name: Sync upstream (preserve .claude-plugin)
+        if: steps.check.outputs.behind != '0'
+        run: |
+          set -euo pipefail
+
+          FORK_HEAD=$(git rev-parse HEAD)
+          UPSTREAM_SHA=$(git rev-parse --short upstream/main)
+
+          set +e
+          git merge --no-ff --no-commit upstream/main
+          MERGE_STATUS=$?
+          set -e
+
+          # 始终保留本仓库的 .claude-plugin，不被上游覆盖
+          if git ls-tree -r --name-only "${FORK_HEAD}" -- .claude-plugin | grep -q .; then
+            git checkout "${FORK_HEAD}" -- .claude-plugin
+            git add -- .claude-plugin
+          fi
+
+          CONFLICTS=$(git diff --name-only --diff-filter=U || true)
+          if [ -n "${CONFLICTS}" ]; then
+            echo "::error::Unresolved merge conflicts (outside preserved paths):"
+            echo "${CONFLICTS}"
+            git merge --abort || true
+            exit 1
+          fi
+
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "No effective changes after merge; aborting empty merge."
+            git merge --abort || true
+            exit 0
+          fi
+
+          if [ "${MERGE_STATUS}" -ne 0 ]; then
+            echo "Merge had conflicts that were resolved by preserving .claude-plugin."
+          fi
+
+          git commit -m "chore: sync upstream (${UPSTREAM_SHA}), keep .claude-plugin"
+          git push origin HEAD:${{ github.ref_name }}
+          echo "Synced to upstream ${UPSTREAM_SHA}."
