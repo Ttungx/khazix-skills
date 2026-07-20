@@ -1,0 +1,80 @@
+{
+  "name": "khazix-skills",
+  "owner": {
+    "name": "Ttungx",
+    "url": "https://github.com/Ttungx"
+  },
+  "metadata": {
+    "description": "数字生命卡兹克开源的 AI Skills 合集：neat-freak、hv-analysis、khazix-writer、aihot、storage-analyzer。兼容 Claude Code、Codex 及 Agent Skills 标准。",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "storage-analyzer",
+      "description": "macOS / Windows 只读存储分析：扫描整机磁盘占用，三色分级给出清理建议，生成可交互 HTML 报告并可一键移废纸篓。",
+      "source": "./storage-analyzer",
+      "strict": false,
+      "category": "utilities",
+      "keywords": [
+        "storage",
+        "disk-cleanup",
+        "macos",
+        "windows",
+        "analyzer"
+      ]
+    },
+    {
+      "name": "aihot",
+      "description": "查询 AI HOT 中文 AI 资讯、精选、当前热点和日报。通过 aihot.virxact.com 公开只读 API 获取实时数据，无需 API Key。",
+      "source": "./aihot",
+      "strict": false,
+      "category": "productivity",
+      "keywords": [
+        "ai-news",
+        "aihot",
+        "日报",
+        "资讯"
+      ]
+    },
+    {
+      "name": "neat-freak",
+      "description": "会话收尾洁癖：对齐项目文档、CLAUDE.md/AGENTS.md、Agent 记忆与代码现状，并审计工作区规则是否被执行。触发词：/neat、洁癖、整理文档。",
+      "source": "./neat-freak",
+      "strict": false,
+      "category": "developer-tools",
+      "keywords": [
+        "docs",
+        "memory",
+        "closeout",
+        "governance",
+        "洁癖"
+      ]
+    },
+    {
+      "name": "hv-analysis",
+      "description": "横纵分析法深度研究：纵轴追溯生命历程，横轴同期竞品对比，交叉产出洞察，最终生成排版精美的 PDF 研究报告。",
+      "source": "./hv-analysis",
+      "strict": false,
+      "category": "productivity",
+      "keywords": [
+        "research",
+        "competitive-analysis",
+        "deep-research",
+        "横纵分析"
+      ]
+    },
+    {
+      "name": "khazix-writer",
+      "description": "数字生命卡兹克公众号长文写作风格：根据素材撰写、续写、扩写公众号长文，保持活人感与真诚表达。",
+      "source": "./khazix-writer",
+      "strict": false,
+      "category": "productivity",
+      "keywords": [
+        "writing",
+        "wechat",
+        "公众号",
+        "长文"
+      ]
+    }
+  ]
+}
