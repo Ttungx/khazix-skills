@@ -5,8 +5,8 @@
     "url": "https://github.com/Ttungx"
   },
   "metadata": {
-    "description": "数字生命卡兹克开源的 AI Skills 合集：neat-freak、hv-analysis、khazix-writer、aihot、storage-analyzer。兼容 Claude Code、Codex 及 Agent Skills 标准。",
-    "version": "1.0.0"
+    "description": "数字生命卡兹克开源的 AI Skills 合集：neat-freak、hv-analysis、khazix-writer、aihot、storage-analyzer、leader。兼容 Claude Code、Codex 及 Agent Skills 标准。",
+    "version": "1.1.0"
   },
   "plugins": [
     {
@@ -74,6 +74,19 @@
         "wechat",
         "公众号",
         "长文"
+      ]
+    },
+    {
+      "name": "leader",
+      "description": "领导模式：把一句话的想法拆成 AI agent 能独立跑完的目标任务书。先实测代码库、必要时联网调研，一次提问 ≤5 个，产出 ≤4000 字符、直接粘进 /goal 就能跑的任务书，含防作弊验收与断点续跑。",
+      "source": "./leader",
+      "strict": false,
+      "category": "developer-tools",
+      "keywords": [
+        "goal",
+        "task-book",
+        "agent",
+        "规划"
       ]
     }
   ]
